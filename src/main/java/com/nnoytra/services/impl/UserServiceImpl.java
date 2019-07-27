@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nnoytra.converter.utils.UserUtils;
 import com.nnoytra.entities.User;
 import com.nnoytra.repository.RoleRepository;
 import com.nnoytra.repository.UserRepository;
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired private RoleRepository roleRepository;
 	@Autowired private ModelMapper modelMapper;
 	@Autowired private PasswordEncoder passwordEncoder;
+	@Autowired private UserUtils userUtils;
 
 	@Override
 	public List<UserRest> findAll() {
@@ -46,12 +48,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserRest saveUser(UserRequest userRequest) {
 		
-		User newUser = UserUtils.convertUserRequestToUserEntity(userRequest);
-		newUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-		newUser.setRole(roleRepository.findByRole("USER"));
-		newUser.setUserID(UUID.randomUUID().toString());
+		User newUser = userUtils.convertUserRequestToUserEntity(userRequest);
 		User saveUser = userRepository.save(newUser);	
-		UserRest userRest = UserUtils.convertUserEntityToUserRest(saveUser);
+		UserRest userRest = userUtils.convertUserEntityToUserRest(saveUser);
 		
 		return userRest;
 	}

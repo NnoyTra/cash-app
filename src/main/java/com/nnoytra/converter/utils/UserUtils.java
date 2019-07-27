@@ -1,12 +1,16 @@
-package com.nnoytra.services.impl;
+package com.nnoytra.converter.utils;
 
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import com.nnoytra.entities.Address;
 import com.nnoytra.entities.User;
 import com.nnoytra.entities.UserContact;
+import com.nnoytra.repository.RoleRepository;
 import com.nnoytra.request.AddressRequest;
 import com.nnoytra.request.UserContactRequest;
 import com.nnoytra.request.UserRequest;
@@ -15,11 +19,14 @@ import com.nnoytra.rest.RoleRest;
 import com.nnoytra.rest.UserContactRest;
 import com.nnoytra.rest.UserRest;
 
+@Component
 public class UserUtils {
 	
-	private static ModelMapper modelMapper = new ModelMapper();
+	@Autowired private  PasswordEncoder passwordEncoder;
+	@Autowired private  ModelMapper modelMapper;
+	@Autowired private RoleRepository roleRepository;	
 
-	public static User convertUserRequestToUserEntity(UserRequest userRequest) {
+	public  User convertUserRequestToUserEntity(UserRequest userRequest) {
 		AddressRequest addressRequest = userRequest.getUserContactRequest().getAddressRequest();
 		Address newAddress = modelMapper.map(addressRequest, Address.class);
 		UserContactRequest userContactRequest = userRequest.getUserContactRequest();
@@ -28,17 +35,19 @@ public class UserUtils {
 		
 		User newUser = User.builder()
 									.username(userRequest.getUsername())
-									.password(userRequest.getPassword())
+									.password(passwordEncoder.encode(userRequest.getPassword()))
 									.isAccountNonExpired(true)
 									.isAccountNonLocked(true)
 									.isCredentialsNonExpired(true)
 									.isEnabled(true)
 									.userContact(newUserContact)
+									.userID(UUID.randomUUID().toString())
+									.role(roleRepository.findByRole("USER"))
 									.build();
 		return newUser;
 	}
 	
-	public static UserRest convertUserEntityToUserRest(User saveUser) {
+	public UserRest convertUserEntityToUserRest(User saveUser) {
 		AddressRest addressRest = modelMapper.map(saveUser.getUserContact().getAddress(), AddressRest.class);
 		RoleRest roleRest = modelMapper.map(saveUser.getRole(), RoleRest.class);
 		UserContactRest userContactRest = modelMapper.map(saveUser.getUserContact(), UserContactRest.class);
