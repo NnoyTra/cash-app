@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +30,12 @@ public class User implements UserDetails{
 	private static final long serialVersionUID = 6396547286902529797L;
 	@Id @GeneratedValue
 	private Long id;
-	private String userID,username,password;
+	@Column(unique = true, nullable = false, updatable = false)
+	private String userID;
+	@Column(unique = true, nullable = false, updatable = true)
+	private String username;
+	@Column(unique = true, nullable = false, updatable = true)
+	private String password;
 	private boolean isAccountNonExpired, isAccountNonLocked, isCredentialsNonExpired, isEnabled;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
