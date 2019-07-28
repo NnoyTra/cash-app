@@ -7,12 +7,12 @@ import com.nnoytra.rest.UserRest;
 
 public interface UserService {
 
-	List<UserRest> findAll();
 	List<UserRest> findByLastname(String lastname);
 	
 	UserRest findByUsername(String username);
 	UserRest findByUserID(String userID);
 	
 	UserRest saveUser(UserRequest userRequest);
+	List<UserRest> findAllPageable(int init, int end);
 	
 }

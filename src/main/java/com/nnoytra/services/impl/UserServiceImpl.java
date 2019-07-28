@@ -1,10 +1,13 @@
 package com.nnoytra.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +29,23 @@ public class UserServiceImpl implements UserService {
 	@Autowired private UserUtils userUtils;
 
 	@Override
-	public List<UserRest> findAll() {
-		return null;
+	public List<UserRest> findAllPageable(int init, int end) {
+		
+		Pageable pageable = PageRequest.of(init, end);
+		List<User> users = userRepository.findAll(pageable).getContent();
+		
+		if(users.isEmpty()) { return null;}
+		else {
+			
+			List<UserRest> usersRest = new ArrayList<>();
+			for(User user : users) {
+				usersRest.add(userUtils.convertUserEntityToUserRest(user));
+			}
+			
+			return usersRest ;
+		}
+		
+		
 	}
 
 	@Override

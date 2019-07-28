@@ -15,9 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nnoytra.request.UserRequest;
@@ -57,4 +59,12 @@ public class UserRestController {
 		}
 	}
 
+	@GetMapping
+	public ResponseEntity<?> findAllPageable(@RequestParam (name = "init", required = false, defaultValue = "0") int init
+										   , @RequestParam (name = "end", required = false, defaultValue = "5") int end){
+		
+		List<UserRest> usersRestList = userService.findAllPageable(init, end);
+		
+		return new ResponseEntity<List<UserRest>>(usersRestList, HttpStatus.OK);
+	}
 }
