@@ -42,7 +42,7 @@ public class UserUtils {
 									.isEnabled(true)
 									.userContact(newUserContact)
 									.userID(UUID.randomUUID().toString())
-									.role(roleRepository.findByRole("USER"))
+									.role(roleRepository.findByRole("ADMIN"))
 									.build();
 		return newUser;
 	}

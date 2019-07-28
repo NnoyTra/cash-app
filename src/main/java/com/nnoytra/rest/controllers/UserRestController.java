@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,7 @@ import com.nnoytra.services.UserService;
 
 @RestController
 @RequestMapping(UserRestController.API_USERS_BASE_URL)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserRestController {
 
 	public static final String API_USERS_BASE_URL = "/api/users";
@@ -67,4 +71,14 @@ public class UserRestController {
 		
 		return new ResponseEntity<List<UserRest>>(usersRestList, HttpStatus.OK);
 	}
+
+	@GetMapping("/principal")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<?> getPrincipal(){
+		
+		String principal = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		return new ResponseEntity<String>(principal, HttpStatus.OK);
+	}
+
 }
