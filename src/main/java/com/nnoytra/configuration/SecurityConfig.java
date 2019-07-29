@@ -35,13 +35,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http
 			.cors().disable()
 			.csrf().disable()
+			.httpBasic()
+			.and()
 			.authorizeRequests()
 			.antMatchers(HttpMethod.POST, UserRestController.API_USERS_BASE_URL).permitAll()
 			.anyRequest()
 			.authenticated()
-			//.antMatchers(UserRestController.API_USERS_BASE_URL+"/principal").hasRole("ADMIN")
-            .and()
-            .httpBasic();
+			;
 			
 		
 	}

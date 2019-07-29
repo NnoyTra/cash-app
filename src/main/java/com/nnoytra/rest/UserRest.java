@@ -1,5 +1,7 @@
 package com.nnoytra.rest;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +15,5 @@ public class UserRest {
 
 	private String userID, username;
 	private UserContactRest userContactRest;
-	private RoleRest roleRest;
+	private List<RoleRest> roleRestList;
 }
