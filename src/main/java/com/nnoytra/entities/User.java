@@ -51,8 +51,7 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 
 		return userRoles.stream()
-				.map(userRole -> {
-						return new SimpleGrantedAuthority(userRole.getRole().getAuthority());})
+				.map(userRole -> {return new SimpleGrantedAuthority(userRole.getRole().getAuthority());})
 				.collect(Collectors.toList());
 	}
 

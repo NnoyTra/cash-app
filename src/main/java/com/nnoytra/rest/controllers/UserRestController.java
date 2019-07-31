@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.validation.Valid;
 
@@ -43,25 +44,26 @@ public class UserRestController {
 	@PostMapping
 	public ResponseEntity<?> saveUser(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) {
 
+		if(userRequest == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		if (bindingResult.hasErrors()) {
 			Map<String, List<String>> errorMap = new HashMap<>();
 			List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+	
+			fieldErrors.stream().forEach(populateErrorMap(errorMap));
 
-			for (FieldError fieldError : fieldErrors) {
-				String field = fieldError.getField();
-				String defaultMessage = fieldError.getDefaultMessage();
-				boolean containsField = errorMap.keySet().contains(field);
-
-				if (containsField) {
-					errorMap.get(field).add(defaultMessage);
-				} else {
-					errorMap.put(field, new ArrayList<String>(Arrays.asList(defaultMessage)));
-				}
-			}
 			return new ResponseEntity<Object>(errorMap, HttpStatus.CONFLICT);
 		} else {
 			return new ResponseEntity<UserRest>(userService.saveUser(userRequest), HttpStatus.CREATED);
 		}
+	}
+
+	private Consumer<FieldError> populateErrorMap(Map<String, List<String>> errorMap) {
+		return field -> {
+			if (errorMap.keySet().contains(field.getField())) {
+				errorMap.get(field.getField()).add(field.getDefaultMessage());
+			} else
+				errorMap.put(field.getField(), new ArrayList<>(Arrays.asList(field.getDefaultMessage())));
+		};
 	}
 
 	@GetMapping
@@ -81,5 +83,7 @@ public class UserRestController {
 		
 		return new ResponseEntity<String>(principal, HttpStatus.OK);
 	}
-
+	
+	
+	
 }

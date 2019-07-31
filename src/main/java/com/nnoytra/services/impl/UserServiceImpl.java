@@ -2,16 +2,11 @@ package com.nnoytra.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -73,24 +68,6 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public UserRest saveUser(UserRequest userRequest) {
 		
-//		ExecutorService exService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-//		Future<UserRest> userRestFuture = exService.submit(()->{
-//			User newUser = userUtils.convertUserRequestToUserEntity(userRequest);
-//			User saveUser = userRepository.save(newUser);	
-//			 return userUtils.convertUserEntityToUserRest(saveUser);
-//		});
-//		
-//		
-//		
-//		try {
-//			UserRest userRest = userRestFuture.get();
-//			return userRest;
-//		} catch (InterruptedException | ExecutionException e) {
-//			
-//			throw new RuntimeException("Problem with the Executor Service Call");
-//		}finally {
-//			exService.shutdown();
-//		}
 		User newUser = userUtils.convertUserRequestToUserEntity(userRequest);
 		User saveUser = userRepository.save(newUser);	
 		return userUtils.convertUserEntityToUserRest(saveUser);
