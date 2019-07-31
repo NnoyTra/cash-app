@@ -24,7 +24,7 @@ import com.nnoytra.services.UserService;
 public class UserServiceImpl implements UserService {
 
 	@Autowired private UserRepository userRepository;
-	@Autowired private RoleRepository roleRepository;
+	//@Autowired private RoleRepository roleRepository;
 	@Autowired private ModelMapper modelMapper;
 	@Autowired private PasswordEncoder passwordEncoder;
 	@Autowired private UserUtils userUtils;
