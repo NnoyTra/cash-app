@@ -9,8 +9,6 @@ import java.util.function.Consumer;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -37,7 +35,7 @@ import com.nnoytra.services.UserService;
 public class UserRestController {
 
 	public static final String API_USERS_BASE_URL = "/api/users";
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	//private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired @Qualifier("userServiceImpl")
 	private UserService userService;
 
